@@ -16,4 +16,12 @@ public class UserController {
     public User register(@RequestBody User user) {
         return userService.registerUser(user);
     }
+    @PostMapping("/login")
+    public String login(@RequestBody User user) {
+        User loggedInUser = userService.loginUser(user.getEmail(), user.getPassword());
+        if (loggedInUser != null) {
+            return "Login successful! Welcome " + loggedInUser.getName();
+        }
+        return "Invalid email or password!";
+    }
 }
