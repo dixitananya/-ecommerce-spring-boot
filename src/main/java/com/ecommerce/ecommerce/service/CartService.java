@@ -11,7 +11,8 @@ import com.ecommerce.ecommerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
-
+import java.util.ArrayList;
+import java.util.List;
 @Service
 public class CartService {
 
@@ -65,5 +66,15 @@ public class CartService {
         return cart.getItems().stream()
                 .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
                 .sum();
+    }
+    public Cart saveCart(Cart cart) {
+        return cartRepository.save(cart);
+    }
+    @org.springframework.transaction.annotation.Transactional
+    public void clearCart(Cart cart) {
+        List<CartItem> items = new ArrayList<>(cart.getItems());
+        cart.getItems().clear();
+        cartRepository.save(cart);
+        cartItemRepository.deleteAll(items);
     }
 }
